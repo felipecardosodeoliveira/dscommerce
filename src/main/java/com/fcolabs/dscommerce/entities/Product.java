@@ -27,7 +27,7 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
-    private String imageUrl;
+    private String imgUrl;
 
     @ManyToAny
     @JoinTable(name = "tb_product_category",
@@ -39,15 +39,14 @@ public class Product {
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
 
-    public Product() {
-    }
+    public Product() {}
 
-    public Product(Long id, String name, String description, Double price, String imageUrl, Set<Category> categories) {
+    public Product(Long id, String name, String description, Double price, String imgUrl, Set<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.imgUrl = imgUrl;
         this.categories = categories;
     }
 
@@ -83,12 +82,12 @@ public class Product {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Set<Category> getCategories() {
