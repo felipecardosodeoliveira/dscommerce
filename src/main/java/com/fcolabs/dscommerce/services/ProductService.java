@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fcolabs.dscommerce.DTO.ProductDTO;
 import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.ProductRepository;
+import com.fcolabs.dscommerce.services.Exceptions.EntityNotFound;
 
 @Service
 public class ProductService {
@@ -33,8 +34,28 @@ public class ProductService {
     }
 
     public ProductDTO save(ProductDTO productDTO) {
-        Product product = new Product(productDTO.getId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), productDTO.getImgUrl());
+        Product product = new Product(productDTO.getId(), 
+            productDTO.getName(),
+            productDTO.getDescription(),
+            productDTO.getPrice(),
+            productDTO.getImgUrl());
+
         product = productRepository.save(product);
         return new ProductDTO(product);
     }
+
+    public ProductDTO update(Long id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setPrice(productDTO.getPrice());
+            product.setImgUrl(productDTO.getImgUrl());
+
+            Product updatedProduct = productRepository.save(product);
+            return new ProductDTO(updatedProduct);
+
+    }
+
 }

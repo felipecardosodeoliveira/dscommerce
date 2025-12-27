@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fcolabs.dscommerce.DTO.ProductDTO;
 import com.fcolabs.dscommerce.services.ProductService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping(value = "/products")
@@ -33,5 +35,10 @@ public class ProductController {
     @PostMapping
     public ProductDTO save(@RequestBody ProductDTO productDTO) {
         return productService.save(productDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ProductDTO update(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+        return productService.update(id, productDTO);
     }
 }
