@@ -1,8 +1,9 @@
 package com.fcolabs.dscommerce.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +24,8 @@ public class ProductController {
     private ProductService productService;
   
     @GetMapping
-    public List<ProductDTO> findAll() {
-        return productService.findAll();
+    public Page<ProductDTO> findAll(Pageable pageable) {
+        return productService.findAll(pageable);
     }
 
     @GetMapping(value = "/{id}")
@@ -40,5 +41,10 @@ public class ProductController {
     @PutMapping("/{id}")
     public ProductDTO update(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         return productService.update(id, productDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        productService.delete(id);
     }
 }
