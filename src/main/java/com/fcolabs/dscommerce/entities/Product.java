@@ -41,13 +41,13 @@ public class Product {
 
     public Product() {}
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, Set<Category> categories) {
+    public Product(Long id, String name, String description, Double price, String imgUrl/**Set<Category> categories**/) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.categories = categories;
+        // this.categories = categories;
     }
 
     public Long getId() {
@@ -105,5 +105,29 @@ public class Product {
     public List<Order> getOrders() {
         return items.stream().map(x -> x.getOrder()).toList();
     }
-    
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Product other = (Product) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
 }
