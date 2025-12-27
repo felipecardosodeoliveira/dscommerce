@@ -32,33 +32,33 @@ public class ProductService {
         return productDTO;
     }
 
-    public ProductDTO save(ProductDTO productDTO) {
-        Product product = new Product(productDTO.getId(), 
-            productDTO.getName(),
-            productDTO.getDescription(),
-            productDTO.getPrice(),
-            productDTO.getImgUrl());
-
+    @Transactional
+    public ProductDTO insert(ProductDTO dto) {
+        Product product = copyDtoToProduct(dto);
         product = productRepository.save(product);
         return new ProductDTO(product);
     }
 
-    public ProductDTO update(@PathVariable Long id, ProductDTO productDTO) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
-
-            product.setName(productDTO.getName());
-            product.setDescription(productDTO.getDescription());
-            product.setPrice(productDTO.getPrice());
-            product.setImgUrl(productDTO.getImgUrl());
-
+    @Transactional
+    public ProductDTO update(@PathVariable Long id, ProductDTO dto) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+            product = copyDtoToProduct(dto);
             Product updatedProduct = productRepository.save(product);
             return new ProductDTO(updatedProduct);
     }
 
+    @Transactional
     public void delete(@PathVariable Long id) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
         productRepository.delete(product);
+    }
+
+    private Product copyDtoToProduct(ProductDTO dto) {
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+        product.setImgUrl(dto.getImgUrl());
+        return product;
     }
 }
