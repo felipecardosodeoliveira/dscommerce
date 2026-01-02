@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.fcolabs.dscommerce.DTO.ProductDTO;
 import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.ProductRepository;
-import com.fcolabs.dscommerce.services.Exceptions.EntityNotFound;
+import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
 
 @Service
 public class ProductService {
@@ -27,7 +27,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         ProductDTO productDTO = new ProductDTO(product);
         return productDTO;
     }
@@ -42,7 +44,9 @@ public class ProductService {
 
     @Transactional
     public ProductDTO update(@PathVariable Long id, ProductDTO dto) {
-        Product entity = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+        Product entity = productRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         entity = copyDtoToEntity(dto, entity);
         Product updatedProduct = productRepository.save(entity);
         return new ProductDTO(updatedProduct);
@@ -50,7 +54,9 @@ public class ProductService {
 
     @Transactional
     public void delete(@PathVariable Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+        Product product = productRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
         productRepository.delete(product);
     }
 
