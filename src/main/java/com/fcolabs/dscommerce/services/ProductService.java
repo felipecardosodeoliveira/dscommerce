@@ -34,17 +34,18 @@ public class ProductService {
 
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
-        Product product = copyDtoToProduct(dto);
-        product = productRepository.save(product);
-        return new ProductDTO(product);
+        Product entity = new Product();
+        entity = copyDtoToEntity(dto, entity);
+        entity = productRepository.save(entity);
+        return new ProductDTO(entity);
     }
 
     @Transactional
     public ProductDTO update(@PathVariable Long id, ProductDTO dto) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
-            product = copyDtoToProduct(dto);
-            Product updatedProduct = productRepository.save(product);
-            return new ProductDTO(updatedProduct);
+        Product entity = productRepository.findById(id).orElseThrow(() -> new EntityNotFound("Product not found with id: " + id));
+        entity = copyDtoToEntity(dto, entity);
+        Product updatedProduct = productRepository.save(entity);
+        return new ProductDTO(updatedProduct);
     }
 
     @Transactional
@@ -53,12 +54,11 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    private Product copyDtoToProduct(ProductDTO dto) {
-        Product product = new Product();
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        product.setImgUrl(dto.getImgUrl());
-        return product;
+    private Product copyDtoToEntity(ProductDTO dto, Product entity) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgUrl(dto.getImgUrl());
+        return entity;
     }
 }
