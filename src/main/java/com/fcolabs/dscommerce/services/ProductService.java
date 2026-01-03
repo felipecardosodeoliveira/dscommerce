@@ -1,15 +1,18 @@
 package com.fcolabs.dscommerce.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fcolabs.dscommerce.DTO.ProductDTO;
 import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.ProductRepository;
+import com.fcolabs.dscommerce.services.Exceptions.DatabaseException;
 import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -56,12 +59,15 @@ public class ProductService {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(@PathVariable Long id) {
-        Product product = productRepository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        productRepository.delete(product);
+        try {
+            productRepository.deleteById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Product not found with id: " + id);
+        } catch(DataIntegrityViolationException e) {
+            throw new DatabaseException("Referential Integrity Failed");
+        }
     }
 
     private Product copyDtoToEntity(ProductDTO dto, Product entity) {
