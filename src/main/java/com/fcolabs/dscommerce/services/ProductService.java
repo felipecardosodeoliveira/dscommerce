@@ -12,6 +12,8 @@ import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.ProductRepository;
 import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ProductService {
     @Autowired
@@ -37,19 +39,21 @@ public class ProductService {
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
-        entity = copyDtoToEntity(dto, entity);
+        copyDtoToEntity(dto, entity);
         entity = productRepository.save(entity);
         return new ProductDTO(entity);
     }
 
     @Transactional
     public ProductDTO update(@PathVariable Long id, ProductDTO dto) {
-        Product entity = productRepository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        entity = copyDtoToEntity(dto, entity);
-        Product updatedProduct = productRepository.save(entity);
-        return new ProductDTO(updatedProduct);
+        try {
+            Product entity = productRepository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = productRepository.save(entity);
+            return new ProductDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Product not found with id: " + id);
+        }
     }
 
     @Transactional
