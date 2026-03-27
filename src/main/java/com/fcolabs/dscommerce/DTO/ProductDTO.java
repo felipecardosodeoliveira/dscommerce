@@ -1,5 +1,9 @@
 package com.fcolabs.dscommerce.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fcolabs.dscommerce.entities.Category;
 import com.fcolabs.dscommerce.entities.Product;
 
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +24,7 @@ public class ProductDTO {
     @Positive(message = "O preço deve ser positivo")
     private Double price;
     private String imgUrl;
+    private List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO() {}
 
@@ -37,6 +42,9 @@ public class ProductDTO {
         this.description = entity.getDescription();
         this.price = entity.getPrice();
         this.imgUrl = entity.getImgUrl();
+        for(Category category: entity.getCategories()) {
+            categories.add(new CategoryDTO(category));
+        }        
     }
 
     public Long getId() {
@@ -57,5 +65,9 @@ public class ProductDTO {
 
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return categories;
     }
 }

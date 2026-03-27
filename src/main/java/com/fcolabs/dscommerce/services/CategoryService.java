@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fcolabs.dscommerce.DTO.CategoryDTO;
-import com.fcolabs.dscommerce.DTO.ProductDTO;
 import com.fcolabs.dscommerce.entities.Category;
-import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.CategoryRepository;
 import com.fcolabs.dscommerce.services.Exceptions.DatabaseException;
 import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
@@ -75,5 +73,9 @@ public class CategoryService {
     private Category copyDtoToEntity(CategoryDTO dto, Category entity) {
         entity.setName(dto.getName());
         return entity;
+    }
+
+    public Category getReference(Long id) {
+        return categoryRepository.getReferenceById(id);
     }
 }

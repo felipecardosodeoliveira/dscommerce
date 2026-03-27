@@ -3,13 +3,18 @@ package com.fcolabs.dscommerce.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.fcolabs.dscommerce.DTO.CategoryDTO;
 import com.fcolabs.dscommerce.DTO.ProductDTO;
+import com.fcolabs.dscommerce.DTO.ProductMinDTO;
+import com.fcolabs.dscommerce.entities.Category;
 import com.fcolabs.dscommerce.entities.Product;
 import com.fcolabs.dscommerce.repositories.ProductRepository;
 import com.fcolabs.dscommerce.services.Exceptions.DatabaseException;
@@ -22,11 +27,22 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired 
+    private CategoryService categoryService;
+
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(Pageable pageable) {
-        Page<Product> result = productRepository.findAll(pageable);
-        Page<ProductDTO> pageProductDTO = result
-            .map(prod -> new ProductDTO(prod));
+    public Page<ProductMinDTO> findAll(Pageable pageable) {
+        Pageable sortedByName = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.ASC, "name") 
+        );
+            
+        Page<Product> result = productRepository.findAll(sortedByName
+            
+        );
+        Page<ProductMinDTO> pageProductDTO = result
+            .map(prod -> new ProductMinDTO(prod));
         return pageProductDTO;
     }
 
@@ -43,6 +59,8 @@ public class ProductService {
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
         copyDtoToEntity(dto, entity);
+
+
         entity = productRepository.save(entity);
         return new ProductDTO(entity);
     }
@@ -75,6 +93,12 @@ public class ProductService {
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
+
+        for(CategoryDTO categoryDTO: dto.getCategories()) {
+            Category category = categoryService.getReference(categoryDTO.getId());
+            entity.getCategories().add(category);
+        }
+
         return entity;
     }
 }

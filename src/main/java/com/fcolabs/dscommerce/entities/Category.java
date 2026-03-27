@@ -23,10 +23,10 @@ public class Category {
 
     public Category() {}
 
-    public Category(Long id, String name, Set<Product> products) {
+    public Category(Long id, String name /**,Set<Product> products**/) {
         this.id = id;
         this.name = name;
-        this.products = products;
+        // this.products = products;
     }
 
     public Long getId() {

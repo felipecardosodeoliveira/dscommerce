@@ -2,7 +2,6 @@ package com.fcolabs.dscommerce.controllers;
 
 import java.net.URI;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
