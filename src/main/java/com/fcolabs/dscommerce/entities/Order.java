@@ -78,6 +78,14 @@ public class Order {
     public List<Product> getProducts() {
         return items.stream().map(x -> x.geProduct()).toList();
     }
+    
+    public User getClient() {
+        return client;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
 
     @Override
     public int hashCode() {

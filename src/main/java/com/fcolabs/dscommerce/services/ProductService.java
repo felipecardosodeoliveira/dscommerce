@@ -59,8 +59,6 @@ public class ProductService {
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
         copyDtoToEntity(dto, entity);
-
-
         entity = productRepository.save(entity);
         return new ProductDTO(entity);
     }
