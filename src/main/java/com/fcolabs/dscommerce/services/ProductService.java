@@ -31,16 +31,8 @@ public class ProductService {
     private CategoryService categoryService;
 
     @Transactional(readOnly = true)
-    public Page<ProductMinDTO> findAll(Pageable pageable) {
-        Pageable sortedByName = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.ASC, "name") 
-        );
-            
-        Page<Product> result = productRepository.findAll(sortedByName
-            
-        );
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
+        Page<Product> result = productRepository.searchByName(name, pageable);
         Page<ProductMinDTO> pageProductDTO = result
             .map(prod -> new ProductMinDTO(prod));
         return pageProductDTO;
