@@ -15,7 +15,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "tb_role")
 public class Role implements GrantedAuthority {
-    @Id
+	private static final long serialVersionUID = 7152288664017784394L;
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String authority;
