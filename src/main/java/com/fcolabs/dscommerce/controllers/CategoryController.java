@@ -2,7 +2,6 @@ package com.fcolabs.dscommerce.controllers;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,11 @@ import com.fcolabs.dscommerce.services.CategoryService;
 @RestController
 @RequestMapping(value = "/categories")
 public class CategoryController {
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {

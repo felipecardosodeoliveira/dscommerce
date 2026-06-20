@@ -2,7 +2,6 @@ package com.fcolabs.dscommerce.services;
 
 import java.time.Instant;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +21,20 @@ import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
 @Service
 public class OrderService {
     
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
-    @Autowired 
-    private OrderItemRepository orderItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    OrderService(ProductRepository productRepository, UserRepository userRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository) {
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.orderRepository = orderRepository;
+    }
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {

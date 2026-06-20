@@ -2,7 +2,6 @@ package com.fcolabs.dscommerce.controllers;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +17,11 @@ import com.fcolabs.dscommerce.services.OrderService;
 @RestController
 @RequestMapping(value = "/orders")
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrderDTO> findById(@PathVariable Long id) {

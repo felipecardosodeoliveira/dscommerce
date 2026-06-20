@@ -1,11 +1,8 @@
 package com.fcolabs.dscommerce.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +21,14 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    ProductService(CategoryService categoryService, ProductRepository productRepository) {
+        this.categoryService = categoryService;
+        this.productRepository = productRepository;
+    }
 
     @Transactional(readOnly = true)
     public Page<ProductMinDTO> findAll(String name, Pageable pageable) {

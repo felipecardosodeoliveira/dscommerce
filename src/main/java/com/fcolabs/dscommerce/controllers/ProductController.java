@@ -2,7 +2,6 @@ package com.fcolabs.dscommerce.controllers;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +27,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequestMapping(value = "/products")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    ProductController(ProductService productService) {
+        this.productService = productService;
+    }
   
     @GetMapping
     public ResponseEntity<Page<ProductMinDTO>> findAll(@RequestParam(name = "name", defaultValue = "") String name, Pageable pageable) {
