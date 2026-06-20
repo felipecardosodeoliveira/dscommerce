@@ -1,9 +1,7 @@
 package com.fcolabs.dscommerce.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.fcolabs.dscommerce.DTO.UserDTO;
 import com.fcolabs.dscommerce.entities.Role;
 import com.fcolabs.dscommerce.entities.User;
 import com.fcolabs.dscommerce.projections.UserDetailsProjection;
@@ -54,5 +54,10 @@ public class UserService implements UserDetailsService {
 		} catch (Exception e) {
 			throw new UsernameNotFoundException("Usuário não encontrado.");
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public UserDTO getMe() {
+		return new UserDTO(authenticated());
 	}
 }

@@ -4,21 +4,28 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+
+import com.fcolabs.dscommerce.entities.User;
+
 public class UserDTO {
     private Long id;
     private String name;
     private String email;
     private String phone;
     private LocalDate birthDate;
+    private List<String> roles = new ArrayList<>();
 
-    public UserDTO() {}
+    public UserDTO(User entity) {
+        this.id = entity.getId();
+        this.name = entity.getName();
+        this.email = entity.getEmail();
+        this.phone = entity.getPhone();
+        this.birthDate = entity.getBirthDate();
 
-    public UserDTO(Long id, String name, String email, String phone, LocalDate birthDate) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.birthDate = birthDate;
+        for (GrantedAuthority role : entity.getRoles()) {
+            roles.add(role.getAuthority());
+        }
     }
 
     public Long getId() {
@@ -40,7 +47,8 @@ public class UserDTO {
     public LocalDate getBirthDate() {
         return birthDate;
     }
-  
 
-
+    public List<String> getRoles() {
+        return roles;
+    }
 }
