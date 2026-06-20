@@ -3,6 +3,7 @@ package com.fcolabs.dscommerce.DTO;
 import com.fcolabs.dscommerce.entities.Product;
 
 public class ProductMinDTO {
+    private Long id;
     private String name;
     private Double price;
     private String imgUrl;
@@ -10,13 +11,14 @@ public class ProductMinDTO {
     public ProductMinDTO() {
     }
 
-    public ProductMinDTO(String name, Double price, String imgUrl) {
+    public ProductMinDTO(Long id, String name, Double price, String imgUrl) {
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
     }
     
     public ProductMinDTO(Product entity) {
+        this.id = entity.getId();
         this.name = entity.getName();
         this.price = entity.getPrice();
         this.imgUrl = entity.getImgUrl();
