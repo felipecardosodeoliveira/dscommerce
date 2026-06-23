@@ -21,6 +21,8 @@ import com.fcolabs.dscommerce.services.Exceptions.ResourceNotFoundException;
 @Service
 public class OrderService {
     
+    private final AuthService authService;
+
     private final OrderRepository orderRepository;
 
     private final OrderItemRepository orderItemRepository;
@@ -31,18 +33,20 @@ public class OrderService {
 
     private final UserService userService;
 
-    OrderService(ProductRepository productRepository, UserRepository userRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository, UserService userService) {
+    OrderService(ProductRepository productRepository, UserRepository userRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository, UserService userService, AuthService authService) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
         this.userService = userService;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado!"));
+        authService.validateSelfOrAdmin(order.getClient().getId());
         return new OrderDTO(order);
     }
 
