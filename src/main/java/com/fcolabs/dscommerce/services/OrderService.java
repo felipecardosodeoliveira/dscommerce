@@ -29,11 +29,14 @@ public class OrderService {
 
     private final ProductRepository productRepository;
 
-    OrderService(ProductRepository productRepository, UserRepository userRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository) {
+    private final UserService userService;
+
+    OrderService(ProductRepository productRepository, UserRepository userRepository, OrderItemRepository orderItemRepository, OrderRepository orderRepository, UserService userService) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -50,12 +53,13 @@ public class OrderService {
         order.setMoment(Instant.now());
         order.setStatus(OrderStatus.WAITING_PAYMENT);
 
-        User user = userRepository.getReferenceById(dto.getClient().getId());
+        User user = userService.authenticated();
+
         order.setClient(user);
 
         for (OrderItemDTO item: dto.getItems()) {
             Product product = productRepository.getReferenceById(item.getProductId());
-            OrderItem orderItem = new OrderItem(order, product, item.getQuantity(), item.getPrice());
+            OrderItem orderItem = new OrderItem(order, product, item.getQuantity(), product.getPrice());
             order.getItems().add(orderItem);
         }
 

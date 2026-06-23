@@ -42,7 +42,7 @@ public class OrderItemDTO {
         return imgUrl;
     }
 
-    public Double subTotal() {
+    public Double getSubTotal() {
         return quantity * price;
     }
 }

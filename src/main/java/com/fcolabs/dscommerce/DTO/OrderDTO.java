@@ -8,12 +8,15 @@ import com.fcolabs.dscommerce.entities.Order;
 import com.fcolabs.dscommerce.entities.OrderItem;
 import com.fcolabs.dscommerce.enums.OrderStatus;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class OrderDTO {
     private Long id;
     private Instant moment;
     private OrderStatus status;
     private ClientDTO client;
     private PaymentDTO payment;
+    @NotEmpty(message = "Deve ter pelo menos um item.")
     private List<OrderItemDTO> items = new ArrayList<>();
 
     public OrderDTO() {}
@@ -61,4 +64,12 @@ public class OrderDTO {
     public List<OrderItemDTO> getItems() {
         return items;
     } 
+    
+    public Double getTotal() {
+        double sum = 0.0;
+        for (OrderItemDTO item : items) {
+            sum = sum + item.getSubTotal();
+        }
+        return sum;
+    }
 }
