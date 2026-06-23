@@ -83,7 +83,7 @@ public class ProductService {
         entity.setDescription(dto.getDescription());
         entity.setPrice(dto.getPrice());
         entity.setImgUrl(dto.getImgUrl());
-
+        entity.getCategories().clear();
         for(CategoryDTO categoryDTO: dto.getCategories()) {
             Category category = categoryService.getReference(categoryDTO.getId());
             entity.getCategories().add(category);
